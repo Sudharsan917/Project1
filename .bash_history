@@ -571,3 +571,30 @@ docker ps -a
 sudo apt-get git
 sudo apt-get install git
 ll
+git clone https://github.com/Sudharsan917/Project1.git
+git login
+git init
+ll
+git config --global user.name sudharsanyadav917@gmail.com
+git clone https://github.com/Sudharsan917/Project1.git
+git clone git@github.com:Sudharsan917/Project1.git
+lllll
+ll
+cd .git/
+ll
+cd ..
+pwd
+ll
+git clone git@github.com:Sudharsan917/Project1.git
+git add .
+git status
+git commit -m "This is the first commit"
+git push
+git remote add origin git@github.com:Sudharsan917/Project1.git
+git push -u origin main
+git push -u origin master
+git status
+git remote add origin git@github.com:Sudharsan917/Project1.git
+git push -u origin master
+ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
