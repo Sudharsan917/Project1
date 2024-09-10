@@ -1,6 +1,7 @@
-pipeline{
+pipeline {
 agent any
-tools {
+tools
+{
 jdk 'jdk22'
 maven 'maven3'
 }
@@ -30,14 +31,16 @@ sh "mvn test"
 }
 stages('File System scan') {
 steps {
-sh "trivy fs --format table -o trivy-fs-report.html ."
+sh "trivy fs --format table -o trivy-fs-report.html "
 }
 }
 stage('SonarQube analsyis')
 {
 steps{
 withSonarQubeEnv('sonar') {
-    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=BoardGame -Dsonar.projectKey=BoardGame -Dsonar.java.binaries=. '''
+   sh '''
+    $SCANNER_HOME/bin/sonar-scanner \-Dsonar.projectName=BoardGame \-Dsonar.projectKey=BoardGame \-Dsonar.java.binaries=.'''
+
 }
 }
 }
@@ -80,8 +83,7 @@ stage('Docker image scan')
 {
 steps
 {
-sh "trivy image --format table -o trivy-image-report.html
-ganeshperumal007/boardshack:latest "
+sh "trivy image --format table -o trivy-image-report.html ganeshperumal007/boardshack:latest"
 }
 }
 stage('push docker image')
@@ -147,8 +149,7 @@ subject: "${jobName} - Build ${buildNumber} -
 ${pipelineStatus.toUpperCase()}",
 body: body,
 to:
-'ganeshperumal882000@gmail.co
-m', from: 'jenkins@example.com',
+'sudharsanyadav917@gmail.com', from: 'jenkins@example.com',
 replyTo: 'jenkins@example.com',
 mimeType: 'text/html',
 attachmentsPattern: 'trivy-image-report.html'
