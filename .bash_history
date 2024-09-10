@@ -598,3 +598,90 @@ git remote add origin git@github.com:Sudharsan917/Project1.git
 git push -u origin master
 ls -al ~/.ssh
 ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
+ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
+cat ~/.ssh/id_rsa.pub
+ssh-add ~/.ssh/id_rsa
+ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
+eval "$(ssh-age
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+git remote -v
+git remote set-url origin git@github.com:Sudharsan917/Project1.git
+git status
+git add .
+git status
+git commit -m "Second commit after changing ssh key"
+git push 
+git push -u origin master
+ll
+sudo service jenkins status
+docker ps 
+docker ps -a
+docker images
+docker start e66acb624ee0
+docker ps 
+ll
+sh trivy.sh
+ll
+vi trivy.sh
+where git
+whereis git
+git version
+cd /usr/bin
+ll
+whereis git
+ls-remote -h
+cd ../..
+\
+pwd
+cd /home/ubuntu
+pwd
+git remote -v
+ssh -T git@github.com
+git
+git version
+ll
+where git
+whereis git
+ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+sudo ssh -T git@github.com
+ssh -T git@github.com
+sudo ssh -T git@github.com
+ls -al ~/.ssh
+ssh -T sudharsanyadav917@gmail.com
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+git remote -v
+git remote set-url origin git@github.com:Sudharsan917/Project1.git
+git ls-remote -h https://<your-username>:git ls-remote -h https://<your-username>:<your-token>@github.com/Sudharsan917/Project1.git
+ @github.com/Sudharsan917/Project1.git
+
+ll
+sudo service jenkins status
+ll
+clear
+ll
+cat ~/.ssh/id_rsa.pub
+ll
+clear
+ls -al ~/.ssh
+ssh -T git@github.com
+ls -al ~/.ssh
+ssh-keygen -t rsa -b 4096 -C "sudharsanyadav917@gmail.com"
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_rsa
+cat ~/.ssh/id_rsa.pub
+ssh -T git@github.com
+git remote -v
+ls -al ~/.ssh
+cat authorized_keys
+clear
