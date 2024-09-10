@@ -139,12 +139,11 @@ ${bannerColor}; padding:
 Status:
 ${pipelineStatus.toUpperCase()}</h3>
 </div>
-<p>Check the <a href="${BUILD_URL}">console
-output</a>.</p>
-"""
+<p>Check the <a href="${BUILD_URL}">console output</a>.</p> """
 </div>
 </body>
 </html>
+  
 emailext (
 subject: "${jobName} - Build ${buildNumber} -
 ${pipelineStatus.toUpperCase()}",
