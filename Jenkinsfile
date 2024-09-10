@@ -24,10 +24,11 @@ pipeline {
             }
         }
         stage('File System Scan') {
-            steps {
-                sh "trivy fs --format table -o trivy-fs-report.html"
-            }
-        }
+    steps {
+        sh "trivy fs --format table -o trivy-fs-report.html ${WORKSPACE}"
+    }
+}
+
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
