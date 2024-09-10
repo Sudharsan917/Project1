@@ -17,7 +17,7 @@ steps{
 git branch: 'master',credentialsId: 'git-cred', url:'https://github.com/Sudharsan917/Project1.git'
 }
 }
-}
+
 stage('Compile')
 {
 steps{
@@ -30,11 +30,12 @@ steps{
 sh "mvn test"
 }
 }
+}
 stages('File System scan') {
 steps {
 sh "trivy fs --format table -o trivy-fs-report.html "
 }
-}
+
 stage('SonarQube analsyis')
 {
 steps{
@@ -153,4 +154,5 @@ post {
             )
         }
     }
+}
 }
