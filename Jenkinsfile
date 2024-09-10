@@ -17,7 +17,6 @@ steps{
 git branch: 'master',credentialsId: 'git-cred', url:'https://github.com/Sudharsan917/Project1.git'
 }
 }
-
 stage('Compile')
 {
 steps{
@@ -31,11 +30,10 @@ sh "mvn test"
 }
 }
 }
-stages('File System scan') {
+stage('File System scan') {
 steps {
 sh "trivy fs --format table -o trivy-fs-report.html "
 }
-
 stage('SonarQube analsyis')
 {
 steps{
@@ -43,7 +41,6 @@ withSonarQubeEnv('sonar') {
   sh ''' $SCANNER_HOME/bin/sonar-scanner -
 Dsonar.projectName=BoardGame -Dsonar.projectKey=BoardGame \
 -Dsonar.java.binaries=. '''
-
 }
 }
 }
@@ -52,7 +49,6 @@ stage('Quality gate')
 steps {
 script {
 waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
-
 }
 }
 }
@@ -68,7 +64,6 @@ steps{
 withMaven(globalMavenSettingsConfig: 'global-settings', jdk: 'jdk22', maven: 'maven3') {
     sh "mvn deploy"
 }
-
 }
 }
 stage('Build & tag docker image')
