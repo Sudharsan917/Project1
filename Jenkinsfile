@@ -29,7 +29,6 @@ steps{
 sh "mvn test"
 }
 }
-}
 stage('File System scan') {
 steps {
 sh "trivy fs --format table -o trivy-fs-report.html "
