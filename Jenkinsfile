@@ -17,6 +17,7 @@ steps{
 git branch: 'master',credentialsId: 'git-cred', url:'https://github.com/Sudharsan917/Project1.git'
 }
 }
+}
 stage('Compile')
 {
 steps{
@@ -51,6 +52,7 @@ steps {
 script {
 waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token'
 
+}
 }
 }
 stage('build')
@@ -93,6 +95,7 @@ steps{
 script{
 withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
 sh "docker push ganeshperumal007/boardshack:latest"
+}
 }
 }
 }
