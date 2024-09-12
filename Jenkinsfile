@@ -13,7 +13,7 @@ pipeline {
     stages {
         stage('Git Checkout') {
             steps {
-               git branch: 'main', credentialsId: 'gitjenkins_cedintial', url: 'https://github.com/ganeshperumal007/Boardgame.git'
+               git branch: 'main', credentialsId: 'gitjenkins_cedintial', url: 'https://github.com/Sudharsan917/Project1.git'
             }
         }
         
