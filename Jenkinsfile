@@ -1,135 +1,148 @@
 pipeline {
     agent any
+    
     tools {
-        jdk 'jdk22'
-        maven 'maven37'
+        jdk 'jdk17'
+        maven 'maven3'
     }
+
     environment {
-        SCANNER_HOME = tool 'SonarQube_Scanner'
+        SCANNER_HOME= tool 'sonar-scanner'
     }
+
     stages {
         stage('Git Checkout') {
             steps {
-                git branch: 'master', credentialsId: 'gitjenkins_cedintial', url: 'https://github.com/Sudharsan917/Project1.git'
+               git branch: 'main', credentialsId: 'git-cred', url: 'https://github.com/ganeshperumal007/Boardgame.git'
             }
         }
+        
         stage('Compile') {
             steps {
                 sh "mvn compile"
             }
         }
+        
         stage('Test') {
             steps {
                 sh "mvn test"
             }
         }
+        
         stage('File System Scan') {
-    steps {
-        sh "trivy fs --format table -o trivy-fs-report.html ${WORKSPACE}"
-    }
-}
-
-        stage('SonarQube Analysis') {
+            steps {
+                sh "trivy fs --format table -o trivy-fs-report.html ."
+            }
+        }
+        
+        stage('SonarQube Analsyis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh '''
-                    $SCANNER_HOME/bin/sonar-scanner \
-                    -Dsonar.projectName=BoardGame \
-                    -Dsonar.projectKey=BoardGame \
-                    -Dsonar.java.binaries=.
-                    '''
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=BoardGame -Dsonar.projectKey=BoardGame \
+                            -Dsonar.java.binaries=. '''
                 }
             }
         }
+        
         stage('Quality Gate') {
             steps {
                 script {
-                    waitForQualityGate abortPipeline: false, credentialsId: '26e6691c-3a23-4e5b-a57d-6148eb921c6b'
+                  waitForQualityGate abortPipeline: false, credentialsId: 'sonar-token' 
                 }
             }
         }
+        
         stage('Build') {
             steps {
-                sh "mvn package"
+               sh "mvn package"
             }
         }
-        stage('Publish to Nexus') {
+        
+        stage('Publish To Nexus') {
             steps {
-                withMaven(globalMavenSettingsConfig: 'global-settings', jdk: 'jdk22', maven: 'maven3') {
+               withMaven(globalMavenSettingsConfig: 'global-settings', jdk: 'jdk17', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
                     sh "mvn deploy"
                 }
             }
         }
+        
         stage('Build & Tag Docker Image') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker build -t ganeshperumal007/boardshack:latest ."
+               script {
+                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                            sh "docker build -t ganeshperumal007/boardshack:latest ."
                     }
-                }
+               }
             }
         }
+        
         stage('Docker Image Scan') {
             steps {
-                sh "trivy image --format table -o trivy-image-report.html ganeshperumal007/boardshack:latest"
+                sh "trivy image --format table -o trivy-image-report.html ganeshperumal007/boardshack:latest "
             }
         }
+        
         stage('Push Docker Image') {
             steps {
-                script {
-                    withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
-                        sh "docker push ganeshperumal007/boardshack:latest"
+               script {
+                   withDockerRegistry(credentialsId: 'docker-cred', toolName: 'docker') {
+                            sh "docker push ganeshperumal007/boardshack:latest"
                     }
-                }
+               }
             }
         }
-        stage('Deploy to Kubernetes') {
+        stage('Deploy To Kubernetes') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
-                    sh "kubectl apply -f deployment-service.yaml"
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.0.56:6443') {
+                        sh "kubectl apply -f deployment-service.yaml"
                 }
             }
         }
+        
         stage('Verify the Deployment') {
             steps {
-                withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.8.146:6443') {
-                    sh "kubectl get pods -n webapps"
-                    sh "kubectl get svc -n webapps"
+               withKubeConfig(caCertificate: '', clusterName: 'kubernetes', contextName: '', credentialsId: 'k8-cred', namespace: 'webapps', restrictKubeConfigAccess: false, serverUrl: 'https://172.31.0.56:6443') {
+                        sh "kubectl get pods -n webapps"
+                        sh "kubectl get svc -n webapps"
                 }
             }
         }
+        
+        
     }
-}
-post {
+    post {
     always {
         script {
             def jobName = env.JOB_NAME
             def buildNumber = env.BUILD_NUMBER
             def pipelineStatus = currentBuild.result ?: 'UNKNOWN'
             def bannerColor = pipelineStatus.toUpperCase() == 'SUCCESS' ? 'green' : 'red'
+
             def body = """
-<html>
-<body>
-<div style="border: 4px solid ${bannerColor}; padding: 10px;">
-    <h2>${jobName} - Build ${buildNumber}</h2>
-    <div style="background-color: ${bannerColor}; padding: 10px;">
-        <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
-    </div>
-    <p>Check the <a href="${env.BUILD_URL}">console output</a>.</p>
-</div>
-</body>
-</html>
-"""
+                <html>
+                <body>
+                <div style="border: 4px solid ${bannerColor}; padding: 10px;">
+                <h2>${jobName} - Build ${buildNumber}</h2>
+                <div style="background-color: ${bannerColor}; padding: 10px;">
+                <h3 style="color: white;">Pipeline Status: ${pipelineStatus.toUpperCase()}</h3>
+                </div>
+                <p>Check the <a href="${BUILD_URL}">console output</a>.</p>
+                </div>
+                </body>
+                </html>
+            """
 
             emailext (
                 subject: "${jobName} - Build ${buildNumber} - ${pipelineStatus.toUpperCase()}",
                 body: body,
-                to: 'sudharsanyadav917@gmail.com', 
-                   from: 'jenkins@example.com',
+                to: 'ganeshperumal882000@gmail.com',
+                from: 'jenkins@example.com',
                 replyTo: 'jenkins@example.com',
                 mimeType: 'text/html',
                 attachmentsPattern: 'trivy-image-report.html'
             )
         }
     }
+}
+
 }
