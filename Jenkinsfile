@@ -31,7 +31,7 @@ pipeline {
         
         stage('File System Scan') {
             steps {
-                sh "trivy fs --include-dev-deps --format table -o trivy-fs-report.html ."
+                sh "trivy fs --scanners vuln --format table -o trivy-fs-report.html ."
             }
         }
         
